@@ -1,0 +1,19 @@
+{
+  "name": "aegisgrid",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:server": "bun run --filter @aegisgrid/server dev",
+    "dev:client": "bun run --filter @aegisgrid/client dev",
+    "build:client": "bun run --filter @aegisgrid/client build",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write",
+    "format": "biome format",
+    "format:fix": "biome format --write"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.7"
+  }
+}

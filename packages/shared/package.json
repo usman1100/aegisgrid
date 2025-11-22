@@ -1,0 +1,16 @@
+{
+  "name": "@aegisgrid/shared",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "exports": {
+    "./types": "./types.ts",
+    "./utils": "./utils.ts"
+  }
+}
