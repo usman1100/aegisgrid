@@ -3,24 +3,20 @@ import { Link } from "react-router-dom";
 import { DefaultLayout } from "../layouts/DefaultLayout";
 import { SignedIn, SignedOut, SignInButton, useAuth } from "@clerk/clerk-react";
 import { useEffect } from "react";
+import { useApiClient } from "../lib/api/client";
 
 export default function Home() {
-  const { getToken, isSignedIn } = useAuth();
+  const client = useApiClient();
+  const { isSignedIn } = useAuth();
   useEffect(() => {
     (async () => {
       if (!isSignedIn) return;
-      const token = await getToken();
-      const json = await fetch("http://localhost:4000/", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const response = await json.json();
-      console.log(response);
-    })();
-  }, [isSignedIn, getToken]);
+      const response = await client.get("/");
+      console.log(response.data);
+    })().catch((e) => {
+      console.error(e);
+    });
+  }, [isSignedIn, client]);
 
   return (
     <DefaultLayout
