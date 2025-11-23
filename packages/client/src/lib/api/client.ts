@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/clerk-react";
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -9,27 +9,23 @@ if (!VITE_API_BASE_URL) {
 }
 
 export const useApiClient = () => {
-  const { getToken, isSignedIn } = useAuth();
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (isSignedIn) {
-      getToken().then((token) => {
-        setToken(token);
-      });
-    }
-  }, [isSignedIn, getToken]);
+  const { getToken } = useAuth();
 
   const client = useMemo(() => {
-    console.log(VITE_API_BASE_URL);
-
-    return axios.create({
+    const axiosInstance = axios.create({
       baseURL: VITE_API_BASE_URL,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
-  }, [token]);
+
+    axiosInstance.interceptors.request.use(async (config) => {
+      const token = await getToken();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
+
+    return axiosInstance;
+  }, [getToken]);
 
   return client;
 };
