@@ -34,7 +34,7 @@ export default function MapPage() {
     setSearch,
   } = useMapSetup();
 
-  const { drawMode, updateDrawMode, allFeatures } = useStore();
+  const { allFeatures } = useStore();
 
   return (
     <DefaultLayout>
@@ -84,41 +84,6 @@ export default function MapPage() {
               />
             </Source>
           </Map>
-
-          {/* Drawing Controls */}
-          <Box
-            sx={{
-              position: "absolute",
-              top: 24,
-              left: 24,
-              zIndex: 10,
-              backgroundColor: "background.paper",
-              borderRadius: 1,
-              boxShadow: 3,
-            }}
-          >
-            <ToggleButtonGroup
-              value={drawMode}
-              exclusive
-              onChange={(_, value) => updateDrawMode(String(value) as DrawMode)}
-              aria-label="drawing mode"
-              orientation="vertical"
-              size="small"
-            >
-              <ToggleButton value="static" aria-label="pan">
-                <PanToolIcon />
-              </ToggleButton>
-              <ToggleButton value="polygon" aria-label="polygon">
-                <PolylineIcon />
-              </ToggleButton>
-              <ToggleButton value="point" aria-label="point">
-                <PlaceIcon />
-              </ToggleButton>
-              <ToggleButton value="select" aria-label="select">
-                <TouchAppIcon />
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Box>
         </Box>
 
         <Box sx={{ position: "absolute", bottom: 50, right: 24 }}>
