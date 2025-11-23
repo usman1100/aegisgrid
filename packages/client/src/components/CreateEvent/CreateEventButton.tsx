@@ -22,15 +22,23 @@ const style = {
 };
 
 export const CreateEventButton = () => {
-  const { modal, closeCreateEventModal, initiateCreateEvent, savePoint } =
-    useStore();
+  const {
+    modal,
+    drawMode,
+    closeCreateEventModal,
+    initiateCreateEvent,
+    savePoint,
+    currentFeature,
+  } = useStore();
 
   const open = modal === "create-event";
+  const buttonText = drawMode == "point" ? "Add a point" : "Create Event";
+  const [lat, ln] = currentFeature?.geometry.coordinates || [];
 
   return (
     <>
       <Button variant="contained" onClick={initiateCreateEvent} disabled={open}>
-        Create Event
+        {buttonText}
       </Button>
       <Modal
         open={open}
@@ -52,6 +60,10 @@ export const CreateEventButton = () => {
               <CloseIcon />
             </IconButton>
           </Stack>
+          <Box my={1}>
+            <Typography>Lat: {lat}</Typography>
+            <Typography>Lng: {ln}</Typography>
+          </Box>
           <Stack spacing={3}>
             <TextField
               label="Event Name"
