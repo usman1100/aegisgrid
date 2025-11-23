@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { MapRef, ViewStateChangeEvent } from "react-map-gl/maplibre";
-import "maplibre-gl/dist/maplibre-gl.css";
 import { TerraDraw } from "terra-draw";
 import { TerraDrawMapLibreGLAdapter } from "terra-draw-maplibre-gl-adapter";
 import type { DrawMode, Location } from "../shared/types";
 import { useAtom } from "jotai";
-import { drawModeAtom } from "../state";
+import { drawModeAtom, featuresAtom } from "../state";
 import { PLACEHOLDER_LOCATIONS, terraDrawModes } from "../shared/constants";
 
 export const useMapSetup = () => {
   const mapRef = useRef<MapRef>(null);
   const drawRef = useRef<TerraDraw | null>(null);
   const [drawMode, setDrawMode] = useAtom(drawModeAtom);
-  const [polygons, setPolygons] = useState<any[]>([]);
+  const [features, setFeatures] = useAtom(featuresAtom);
+  console.log(features);
 
   const [viewState, setViewState] = useState(() => ({
     longitude: PLACEHOLDER_LOCATIONS.at(0)?.lng,
@@ -39,8 +39,10 @@ export const useMapSetup = () => {
     });
 
     draw.on("finish", (_id, _context) => {
-      const snapshot = draw.getSnapshot();
-      setPolygons(snapshot);
+      const feature = draw?.getSnapshot()?.at(0);
+      if (feature) {
+        setFeatures((prev) => [...prev, feature]);
+      }
     });
 
     draw.start();
