@@ -17,14 +17,14 @@
     "@mui/material": "^7.3.5",
     "axios": "^1.13.2",
     "install": "^0.13.0",
-    "jotai": "^2.15.1",
     "maplibre-gl": "^5.13.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-map-gl": "^8.1.0",
     "react-router-dom": "^7.9.6",
     "terra-draw": "^1.19.0",
-    "terra-draw-maplibre-gl-adapter": "^1.2.2"
+    "terra-draw-maplibre-gl-adapter": "^1.2.2",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@types/maplibre-gl": "^1.13.2",

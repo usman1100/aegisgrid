@@ -6,8 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import CloseIcon from "@mui/icons-material/Close";
-import { useAtom, useSetAtom } from "jotai";
-import { createEventModalOpenAtom, drawModeAtom } from "../../state";
+import { useStore } from "../../state";
 
 const style = {
   position: "absolute",
@@ -23,30 +22,19 @@ const style = {
 };
 
 export const CreateEventButton = () => {
-  const [createEventModalOpen, setCreateEventModalOpen] = useAtom(
-    createEventModalOpenAtom
-  );
-  const [drawMode, setDrawMode] = useAtom(drawModeAtom);
-  const handleClose = () => {
-    setCreateEventModalOpen(false);
-  };
+  const { modal, closeCreateEventModal, initiateCreateEvent, savePoint } =
+    useStore();
 
-  const onClick = () => {
-    setDrawMode("point");
-  };
+  const open = modal === "create-event";
 
   return (
     <>
-      <Button
-        variant="contained"
-        onClick={onClick}
-        disabled={drawMode !== "static"}
-      >
+      <Button variant="contained" onClick={initiateCreateEvent} disabled={open}>
         Create Event
       </Button>
       <Modal
-        open={createEventModalOpen}
-        onClose={handleClose}
+        open={open}
+        onClose={closeCreateEventModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -60,7 +48,7 @@ export const CreateEventButton = () => {
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Create Event
             </Typography>
-            <IconButton onClick={handleClose} size="small">
+            <IconButton onClick={closeCreateEventModal} size="small">
               <CloseIcon />
             </IconButton>
           </Stack>
@@ -71,7 +59,12 @@ export const CreateEventButton = () => {
               fullWidth
               placeholder="Enter event name"
             />
-            <Button variant="contained" color="primary" fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={savePoint}
+            >
               Create
             </Button>
           </Stack>

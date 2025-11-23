@@ -2,17 +2,14 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import type { MapRef, ViewStateChangeEvent } from "react-map-gl/maplibre";
 import { TerraDraw } from "terra-draw";
 import { TerraDrawMapLibreGLAdapter } from "terra-draw-maplibre-gl-adapter";
-import type { DrawMode, Location } from "../shared/types";
-import { useAtom, useSetAtom } from "jotai";
-import { createEventModalOpenAtom, drawModeAtom, featuresAtom } from "../state";
+import type { Location } from "../shared/types";
 import { PLACEHOLDER_LOCATIONS, terraDrawModes } from "../shared/constants";
+import { useStore } from "../state";
 
 export const useMapSetup = () => {
   const mapRef = useRef<MapRef>(null);
   const drawRef = useRef<TerraDraw | null>(null);
-  const [drawMode, setDrawMode] = useAtom(drawModeAtom);
-  const [features, setFeatures] = useAtom(featuresAtom);
-  const setCreateEventModalOpenAtom = useSetAtom(createEventModalOpenAtom);
+  const { createPoint, drawMode } = useStore();
 
   const [viewState, setViewState] = useState(() => ({
     longitude: PLACEHOLDER_LOCATIONS.at(0)?.lng,
@@ -41,11 +38,7 @@ export const useMapSetup = () => {
     draw.on("finish", (_id, context) => {
       const feature = draw?.getSnapshot()?.at(0);
       if (feature) {
-        setFeatures((prev) => [...prev, feature]);
-        setDrawMode("static");
-        if (context.mode === "point") {
-          setCreateEventModalOpenAtom(true);
-        }
+        createPoint(feature);
       }
     });
 
@@ -62,15 +55,6 @@ export const useMapSetup = () => {
       }
     }
   }, [drawMode]);
-
-  const handleModeChange = (
-    event: React.MouseEvent<HTMLElement>,
-    newMode: DrawMode | null
-  ) => {
-    if (newMode !== null) {
-      setDrawMode(newMode);
-    }
-  };
 
   const onMapMove = useCallback((evt: ViewStateChangeEvent) => {
     setViewState(evt.viewState);
@@ -94,7 +78,5 @@ export const useMapSetup = () => {
     filteredLocations,
     search,
     setSearch,
-    drawMode,
-    handleModeChange,
   };
 };

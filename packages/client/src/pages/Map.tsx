@@ -13,6 +13,8 @@ import { useTheme } from "@mui/material/styles";
 import { useMapSetup } from "../hooks/useMapSetup";
 import { MapSidebar } from "../components/MapSidebar";
 import { CreateEventButton } from "../components/CreateEvent/CreateEventButton";
+import { useStore } from "../state";
+import type { DrawMode } from "../shared/types";
 
 export default function MapPage() {
   const theme = useTheme();
@@ -25,9 +27,9 @@ export default function MapPage() {
     moveToLocation,
     search,
     setSearch,
-    drawMode,
-    handleModeChange,
   } = useMapSetup();
+
+  const { drawMode, updateDrawMode } = useStore();
 
   return (
     <DefaultLayout>
@@ -75,7 +77,7 @@ export default function MapPage() {
             <ToggleButtonGroup
               value={drawMode}
               exclusive
-              onChange={handleModeChange}
+              onChange={(_, value) => updateDrawMode(String(value) as DrawMode)}
               aria-label="drawing mode"
               orientation="vertical"
               size="small"

@@ -1,12 +1,60 @@
+import { create } from "zustand";
 import { atom } from "jotai";
 import type { DrawMode } from "../shared/types";
 import type { GeoJSONStoreFeatures } from "terra-draw";
 
-export const drawModeAtom = atom<DrawMode>("static");
-export const featuresAtom = atom<GeoJSONStoreFeatures[]>([]);
-export const pointFeaturesAtom = atom<GeoJSONStoreFeatures[]>((get) => {
-  return get(featuresAtom).filter(
-    (feature) => feature.geometry.type === "Point"
-  );
-});
-export const createEventModalOpenAtom = atom<boolean>(false);
+type Store = {
+  drawMode: DrawMode;
+  currentFeature: GeoJSONStoreFeatures | undefined;
+  allFeatures: GeoJSONStoreFeatures[];
+  modal: "create-event" | undefined;
+  initiateCreateEvent: () => void;
+  createPoint: (feature: GeoJSONStoreFeatures) => void;
+  savePoint: () => void;
+  closeCreateEventModal: () => void;
+  updateDrawMode: (mode: DrawMode) => void;
+};
+export const useStore = create<Store>((set) => ({
+  drawMode: "static",
+  currentFeature: undefined,
+  modal: undefined,
+  allFeatures: [],
+
+  initiateCreateEvent: () =>
+    set((prev) => ({
+      ...prev,
+      drawMode: "point",
+    })),
+
+  createPoint: (feature: GeoJSONStoreFeatures) =>
+    set((prev) => ({
+      ...prev,
+      currentFeature: feature,
+      drawMode: "static",
+      modal: "create-event",
+    })),
+
+  savePoint: () =>
+    set((prev) => ({
+      ...prev,
+      allFeatures: prev?.currentFeature
+        ? [...prev.allFeatures, prev.currentFeature]
+        : prev.allFeatures,
+      currentFeature: undefined,
+      modal: undefined,
+      drawMode: "static",
+    })),
+
+  closeCreateEventModal: () =>
+    set((prev) => ({
+      ...prev,
+      drawMode: "static",
+      currentFeature: undefined,
+      modal: undefined,
+    })),
+  updateDrawMode: (mode: DrawMode) =>
+    set((prev) => ({
+      ...prev,
+      drawMode: mode,
+    })),
+}));
