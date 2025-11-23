@@ -42,6 +42,7 @@ export const useMapSetup = () => {
       const feature = draw?.getSnapshot()?.at(0);
       if (feature) {
         setFeatures((prev) => [...prev, feature]);
+        setDrawMode("static");
       }
     });
 
