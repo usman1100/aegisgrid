@@ -18,5 +18,5 @@ app.get("/", (_, res) => {
 app.listen(PORT, async () => {
   await databaseClient.authenticate();
   console.log("Database connection has been established successfully.");
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });
