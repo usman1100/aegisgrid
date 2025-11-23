@@ -8,7 +8,9 @@ import {
   TerraDrawSelectMode,
 } from "terra-draw";
 import { TerraDrawMapLibreGLAdapter } from "terra-draw-maplibre-gl-adapter";
-import type { Location } from "../types";
+import type { DrawMode, Location } from "../types";
+import { useAtom } from "jotai";
+import { drawModeAtom } from "../state";
 
 const locations = [
   {
@@ -76,7 +78,7 @@ const locations = [
 export const useMapSetup = () => {
   const mapRef = useRef<MapRef>(null);
   const drawRef = useRef<TerraDraw | null>(null);
-  const [drawMode, setDrawMode] = useState<string>("static");
+  const [drawMode, setDrawMode] = useAtom(drawModeAtom);
   const [polygons, setPolygons] = useState<any[]>([]);
 
   const [viewState, setViewState] = useState(() => ({
@@ -144,7 +146,7 @@ export const useMapSetup = () => {
 
   const handleModeChange = (
     event: React.MouseEvent<HTMLElement>,
-    newMode: string | null
+    newMode: DrawMode | null
   ) => {
     if (newMode !== null) {
       setDrawMode(newMode);
