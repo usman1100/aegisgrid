@@ -9,3 +9,4 @@ export const pointFeaturesAtom = atom<GeoJSONStoreFeatures[]>((get) => {
     (feature) => feature.geometry.type === "Point"
   );
 });
+export const createEventModalOpenAtom = atom<boolean>(false);
