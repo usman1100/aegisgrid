@@ -9,7 +9,7 @@ import { useStore } from "../state";
 export const useMapSetup = () => {
   const mapRef = useRef<MapRef>(null);
   const drawRef = useRef<TerraDraw | null>(null);
-  const { createPoint, drawMode } = useStore();
+  const { createPoint, drawMode, currentFeature } = useStore();
 
   const [viewState, setViewState] = useState(() => ({
     longitude: PLACEHOLDER_LOCATIONS.at(0)?.lng,
@@ -55,6 +55,13 @@ export const useMapSetup = () => {
       }
     }
   }, [drawMode]);
+
+  // This to only show features that are stored in the allFeatures array
+  useEffect(() => {
+    if (!currentFeature && drawRef.current) {
+      drawRef.current.clear();
+    }
+  }, [currentFeature]);
 
   const onMapMove = useCallback((evt: ViewStateChangeEvent) => {
     setViewState(evt.viewState);

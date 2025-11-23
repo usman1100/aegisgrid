@@ -1,4 +1,9 @@
-import Map, { NavigationControl, ScaleControl } from "react-map-gl/maplibre";
+import Map, {
+  NavigationControl,
+  ScaleControl,
+  Source,
+  Layer,
+} from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
@@ -29,7 +34,7 @@ export default function MapPage() {
     setSearch,
   } = useMapSetup();
 
-  const { drawMode, updateDrawMode } = useStore();
+  const { drawMode, updateDrawMode, allFeatures } = useStore();
 
   return (
     <DefaultLayout>
@@ -59,7 +64,25 @@ export default function MapPage() {
             mapLib={maplibregl}
           >
             <NavigationControl position="top-right" />
-            <ScaleControl />
+            <Source
+              id="saved-features"
+              type="geojson"
+              data={{
+                type: "FeatureCollection",
+                features: allFeatures,
+              }}
+            >
+              <Layer
+                id="saved-features-layer"
+                type="circle"
+                paint={{
+                  "circle-radius": 6,
+                  "circle-color": theme.palette.primary.main,
+                  "circle-stroke-width": 2,
+                  "circle-stroke-color": "#fff",
+                }}
+              />
+            </Source>
           </Map>
 
           {/* Drawing Controls */}
