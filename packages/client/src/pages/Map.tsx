@@ -1,24 +1,8 @@
 import Map, { NavigationControl, ScaleControl } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import {
-  Box,
-  Typography,
-  Paper,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  ListItemIcon,
-  Divider,
-  IconButton,
-  InputBase,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mui/material";
-import {
-  Search as SearchIcon,
-  Menu as MenuIcon,
   Place as PlaceIcon,
   Polyline as PolylineIcon,
   TouchApp as TouchAppIcon,
@@ -26,10 +10,9 @@ import {
 } from "@mui/icons-material";
 import { DefaultLayout } from "../layouts/DefaultLayout";
 import { useTheme } from "@mui/material/styles";
-import { Link } from "react-router-dom";
-import { UserButton } from "@clerk/clerk-react";
 import { useMapSetup } from "../hooks/useMapSetup";
 import { MapSidebar } from "../components/MapSidebar";
+import { CreateEventButton } from "../components/CreateEvent/CreateEventButton";
 
 export default function MapPage() {
   const theme = useTheme();
@@ -56,7 +39,12 @@ export default function MapPage() {
           overflow: "hidden",
         }}
       >
-        <MapSidebar locations={filteredLocations} onItemClick={moveToLocation} search={search} setSearch={setSearch} />
+        <MapSidebar
+          locations={filteredLocations}
+          onItemClick={moveToLocation}
+          search={search}
+          setSearch={setSearch}
+        />
 
         <Box sx={{ flex: 1, position: "relative" }}>
           <Map
@@ -98,11 +86,18 @@ export default function MapPage() {
               <ToggleButton value="polygon" aria-label="polygon">
                 <PolylineIcon />
               </ToggleButton>
+              <ToggleButton value="point" aria-label="point">
+                <PlaceIcon />
+              </ToggleButton>
               <ToggleButton value="select" aria-label="select">
                 <TouchAppIcon />
               </ToggleButton>
             </ToggleButtonGroup>
           </Box>
+        </Box>
+
+        <Box sx={{ position: "absolute", bottom: 50, right: 24 }}>
+          <CreateEventButton />
         </Box>
       </Box>
     </DefaultLayout>

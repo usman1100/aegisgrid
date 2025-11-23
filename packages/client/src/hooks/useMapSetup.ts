@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { MapRef, ViewStateChangeEvent } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { TerraDraw, TerraDrawPolygonMode, TerraDrawSelectMode } from "terra-draw";
+import {
+  TerraDraw,
+  TerraDrawPointMode,
+  TerraDrawPolygonMode,
+  TerraDrawSelectMode,
+} from "terra-draw";
 import { TerraDrawMapLibreGLAdapter } from "terra-draw-maplibre-gl-adapter";
 import type { Location } from "../types";
 
@@ -82,7 +87,9 @@ export const useMapSetup = () => {
 
   const [search, setSearch] = useState("");
 
-  const filteredLocations = locations.filter((location) => location.text.toLowerCase().includes(search.toLowerCase()));
+  const filteredLocations = locations.filter((location) =>
+    location.text.toLowerCase().includes(search.toLowerCase())
+  );
 
   const onMapLoad = useCallback(() => {
     if (!mapRef.current) return;
@@ -95,6 +102,7 @@ export const useMapSetup = () => {
       }),
       modes: [
         new TerraDrawPolygonMode(),
+        new TerraDrawPointMode(),
         new TerraDrawSelectMode({
           flags: {
             polygon: {
@@ -134,7 +142,10 @@ export const useMapSetup = () => {
     }
   }, [drawMode]);
 
-  const handleModeChange = (event: React.MouseEvent<HTMLElement>, newMode: string | null) => {
+  const handleModeChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newMode: string | null
+  ) => {
     if (newMode !== null) {
       setDrawMode(newMode);
     }
