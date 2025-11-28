@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import * as middleware from "./middleware";
 import { clerkMiddleware } from "@clerk/express";
-import { databaseClient } from "./database/client";
+import { databaseClient } from "./db/client";
 const PORT = Bun.env?.PORT || 8000;
 
 const app = express();
