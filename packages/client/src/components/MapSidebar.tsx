@@ -78,9 +78,6 @@ export const MapSidebar = ({
             border: `1px solid ${theme.palette.divider}`,
           }}
         >
-          <IconButton aria-label="menu">
-            <MenuIcon />
-          </IconButton>
           <InputBase
             sx={{ ml: 1, flex: 1 }}
             placeholder="Search places"
