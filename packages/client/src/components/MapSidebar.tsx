@@ -16,17 +16,13 @@ import {
 import { Search as SearchIcon, Place as PlaceIcon } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
-import type { Location } from "../shared/types";
+import { useMapSetup } from "../hooks/useMapSetup";
+import { useStore } from "../state";
 
-type Props = {
-  locations: Location[];
-  onItemClick: (location: Location) => void;
-  search: string;
-  setSearch: (search: string) => void;
-};
-
-export const MapSidebar = ({ locations, onItemClick, search, setSearch }: Props) => {
+export const MapSidebar = () => {
   const theme = useTheme();
+  const { moveToLocation, filteredLocations } = useMapSetup();
+  const { locationSearch, updateLocationSearch } = useStore();
   return (
     <Paper
       elevation={3}
@@ -73,8 +69,8 @@ export const MapSidebar = ({ locations, onItemClick, search, setSearch }: Props)
             sx={{ ml: 1, flex: 1 }}
             placeholder="Search places"
             inputProps={{ "aria-label": "search places" }}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={locationSearch}
+            onChange={(e) => updateLocationSearch(e.target.value)}
           />
           <IconButton type="button" aria-label="search">
             <SearchIcon />
@@ -83,9 +79,9 @@ export const MapSidebar = ({ locations, onItemClick, search, setSearch }: Props)
       </Box>
       <Divider />
       <List sx={{ flex: 1, overflowY: "auto" }}>
-        {locations.map((item) => (
+        {filteredLocations.map((item) => (
           <ListItem key={`${item.lat}-${item.lng}`} disablePadding>
-            <ListItemButton onClick={() => onItemClick(item)}>
+            <ListItemButton onClick={() => moveToLocation(item)}>
               <ListItemIcon>
                 <PlaceIcon color="primary" />
               </ListItemIcon>

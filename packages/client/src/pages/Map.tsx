@@ -13,12 +13,10 @@ import { useMapSetup } from "../hooks/useMapSetup";
 import { DefaultLayout } from "../layouts/DefaultLayout";
 import { useApiClient } from "../lib/api/client";
 import { useStore } from "../state";
-import { CreateGeofenceButton } from "../components/CreateGeofenceButton";
 
 export default function MapPage() {
   const theme = useTheme();
-  const { mapRef, viewState, onMapLoad, onMapMove, filteredLocations, moveToLocation, search, setSearch } =
-    useMapSetup();
+  const { mapRef, viewState, onMapLoad, onMapMove, filteredLocations, moveToLocation } = useMapSetup();
 
   const { allFeatures, populateFeatures } = useStore();
 
@@ -54,7 +52,7 @@ export default function MapPage() {
           overflow: "hidden",
         }}
       >
-        <MapSidebar locations={filteredLocations} onItemClick={moveToLocation} search={search} setSearch={setSearch} />
+        <MapSidebar />
 
         <Box sx={{ flex: 1, position: "relative" }}>
           <Map
@@ -100,7 +98,6 @@ export default function MapPage() {
             right: 24,
           }}
         >
-          <CreateGeofenceButton />
           <CreateEventButton />
         </Box>
       </Box>
