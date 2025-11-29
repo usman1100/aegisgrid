@@ -1,18 +1,18 @@
-import Map, { NavigationControl, Source, Layer } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
+import Map, { Layer, NavigationControl, Source } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Box } from "@mui/material";
-import { DefaultLayout } from "../layouts/DefaultLayout";
-import { useTheme } from "@mui/material/styles";
-import { useMapSetup } from "../hooks/useMapSetup";
-import { MapSidebar } from "../components/MapSidebar";
-import { CreateEventButton } from "../components/CreateEvent/CreateEventButton";
-import { useStore } from "../state";
-import { useApiClient } from "../lib/api/client";
-import { useQuery } from "@tanstack/react-query";
 import type { Event } from "@aegisgrid/shared/validators";
+import { Box } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import type { GeoJSONStoreFeatures } from "terra-draw";
+import { CreateEventButton } from "../components/CreateEvent/CreateEventButton";
+import { MapSidebar } from "../components/MapSidebar";
+import { useMapSetup } from "../hooks/useMapSetup";
+import { DefaultLayout } from "../layouts/DefaultLayout";
+import { useApiClient } from "../lib/api/client";
+import { useStore } from "../state";
 
 
 export default function MapPage() {
