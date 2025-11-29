@@ -1,25 +1,17 @@
 import Map, {
-  NavigationControl,
-  ScaleControl,
-  Source,
-  Layer,
+  NavigationControl, Source,
+  Layer
 } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import {
-  Place as PlaceIcon,
-  Polyline as PolylineIcon,
-  TouchApp as TouchAppIcon,
-  PanTool as PanToolIcon,
-} from "@mui/icons-material";
+import { Box } from "@mui/material";
 import { DefaultLayout } from "../layouts/DefaultLayout";
 import { useTheme } from "@mui/material/styles";
 import { useMapSetup } from "../hooks/useMapSetup";
 import { MapSidebar } from "../components/MapSidebar";
 import { CreateEventButton } from "../components/CreateEvent/CreateEventButton";
 import { useStore } from "../state";
-import type { DrawMode } from "../shared/types";
+
 
 export default function MapPage() {
   const theme = useTheme();
