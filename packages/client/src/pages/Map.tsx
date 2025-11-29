@@ -10,6 +10,10 @@ import { CreateEventButton } from "../components/CreateEvent/CreateEventButton";
 import { useStore } from "../state";
 import { useApiClient } from "../lib/api/client";
 import { useQuery } from "@tanstack/react-query";
+import type { Event } from "@aegisgrid/shared/validators";
+import { useEffect } from "react";
+import type { GeoJSONStoreFeatures } from "terra-draw";
+
 
 export default function MapPage() {
   const theme = useTheme();
@@ -24,15 +28,31 @@ export default function MapPage() {
     setSearch,
   } = useMapSetup();
 
-  const { allFeatures } = useStore();
+  const { allFeatures, populateFeatures } = useStore();
 
   const client = useApiClient();
   const { data } = useQuery({
     queryKey: ["events"],
-    queryFn: () => client.get("events"),
+    queryFn: () => client.get<{events: Event[]}>("events"),
   });
 
-  console.log(data?.data);
+  useEffect(() => {
+    const events = data?.data?.events;
+    if (events) {
+      const features: GeoJSONStoreFeatures[] = events.map(
+        event => ({
+         geometry:{
+           coordinates: [event.location.x, event.location.y],
+           type: 'Point',
+         },
+          properties: {},
+          type: 'Feature',
+          id: event.id,
+        })
+      )
+    populateFeatures(features)
+    }
+  },   [data?.data, populateFeatures])
 
   return (
     <DefaultLayout>
