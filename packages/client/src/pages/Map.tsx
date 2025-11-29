@@ -13,46 +13,36 @@ import { useMapSetup } from "../hooks/useMapSetup";
 import { DefaultLayout } from "../layouts/DefaultLayout";
 import { useApiClient } from "../lib/api/client";
 import { useStore } from "../state";
-
+import { CreateGeofenceButton } from "../components/CreateGeofenceButton";
 
 export default function MapPage() {
   const theme = useTheme();
-  const {
-    mapRef,
-    viewState,
-    onMapLoad,
-    onMapMove,
-    filteredLocations,
-    moveToLocation,
-    search,
-    setSearch,
-  } = useMapSetup();
+  const { mapRef, viewState, onMapLoad, onMapMove, filteredLocations, moveToLocation, search, setSearch } =
+    useMapSetup();
 
   const { allFeatures, populateFeatures } = useStore();
 
   const client = useApiClient();
   const { data } = useQuery({
     queryKey: ["events"],
-    queryFn: () => client.get<{events: Event[]}>("events"),
+    queryFn: () => client.get<{ events: Event[] }>("events"),
   });
 
   useEffect(() => {
     const events = data?.data?.events;
     if (events) {
-      const features: GeoJSONStoreFeatures[] = events.map(
-        event => ({
-         geometry:{
-           coordinates: [event.location.x, event.location.y],
-           type: 'Point',
-         },
-          properties: {},
-          type: 'Feature',
-          id: event.id,
-        })
-      )
-    populateFeatures(features)
+      const features: GeoJSONStoreFeatures[] = events.map((event) => ({
+        geometry: {
+          coordinates: [event.location.x, event.location.y],
+          type: "Point",
+        },
+        properties: {},
+        type: "Feature",
+        id: event.id,
+      }));
+      populateFeatures(features);
     }
-  },   [data?.data, populateFeatures])
+  }, [data?.data, populateFeatures]);
 
   return (
     <DefaultLayout>
@@ -64,12 +54,7 @@ export default function MapPage() {
           overflow: "hidden",
         }}
       >
-        <MapSidebar
-          locations={filteredLocations}
-          onItemClick={moveToLocation}
-          search={search}
-          setSearch={setSearch}
-        />
+        <MapSidebar locations={filteredLocations} onItemClick={moveToLocation} search={search} setSearch={setSearch} />
 
         <Box sx={{ flex: 1, position: "relative" }}>
           <Map
@@ -104,7 +89,18 @@ export default function MapPage() {
           </Map>
         </Box>
 
-        <Box sx={{ position: "absolute", bottom: 50, right: 24 }}>
+        <Box
+          sx={{
+            position: "absolute",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: 1,
+            bottom: 50,
+            right: 24,
+          }}
+        >
+          <CreateGeofenceButton />
           <CreateEventButton />
         </Box>
       </Box>

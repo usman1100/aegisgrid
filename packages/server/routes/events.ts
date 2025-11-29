@@ -19,34 +19,35 @@ router.get("/", async (_req, res) => {
 });
 
 // POST /events - Create a new event
-router.post("/", (req, res, next) => validateRequestBody(req, res, next, createEventSchema), async (req, res) => {
-  try {
-    const { name, location } = req.body;
+router.post(
+  "/",
+  (req, res, next) => validateRequestBody(req, res, next, createEventSchema),
+  async (req, res) => {
+    try {
+      const { name, location } = req.body;
 
-    const result = await databaseClient
-      .insert(events)
-      .values({
-        name,
-        location,
-      })
-      .returning();
+      const result = await databaseClient
+        .insert(events)
+        .values({
+          name,
+          location,
+        })
+        .returning();
 
-    const event = result.at(0);
-    res.status(201).json({ event });
-  } catch (error) {
-    console.error("Error creating event:", error);
-    res.status(500).json({ error: "Failed to create event" });
-  }
-});
+      const event = result.at(0);
+      res.status(201).json({ event });
+    } catch (error) {
+      console.error("Error creating event:", error);
+      res.status(500).json({ error: "Failed to create event" });
+    }
+  },
+);
 
 // GET /events/:id - Get a single event
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await databaseClient
-      .select()
-      .from(events)
-      .where(eq(events.id, id));
+    const result = await databaseClient.select().from(events).where(eq(events.id, id));
 
     const event = result.at(0);
     if (!event) {
@@ -92,10 +93,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await databaseClient
-      .delete(events)
-      .where(eq(events.id, id))
-      .returning();
+    const result = await databaseClient.delete(events).where(eq(events.id, id)).returning();
 
     const event = result.at(0);
     if (!event) {

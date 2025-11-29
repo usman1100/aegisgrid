@@ -43,7 +43,7 @@ export const CreateEventButton = () => {
     mutationFn: (variables: CreateEvent) =>
       client
         .post("/events", {
-          ...variables
+          ...variables,
         })
         .then((res) => res.data),
     onSuccess: () => {
@@ -62,7 +62,7 @@ export const CreateEventButton = () => {
           location: {
             x: currentFeature?.geometry?.coordinates?.[0],
             y: currentFeature?.geometry?.coordinates?.[1],
-          }
+          },
         });
         await createEvent(variables);
         savePoint();
@@ -73,14 +73,7 @@ export const CreateEventButton = () => {
     validationSchema,
   });
 
-  const {
-    modal,
-    drawMode,
-    closeCreateEventModal,
-    initiateCreateEvent,
-    savePoint,
-    currentFeature,
-  } = useStore();
+  const { modal, drawMode, closeCreateEventModal, initiateCreateEvent, savePoint, currentFeature } = useStore();
 
   const onClose = () => {
     closeCreateEventModal();
@@ -103,12 +96,7 @@ export const CreateEventButton = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
+          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Create Event
             </Typography>
@@ -136,14 +124,7 @@ export const CreateEventButton = () => {
               onBlur={formik.handleBlur}
               error={formik.touched.name && Boolean(formik.errors.name)}
             />
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              disabled={isPending}
-              sx={{ mt: 2 }}
-              type="submit"
-            >
+            <Button variant="contained" color="primary" fullWidth disabled={isPending} sx={{ mt: 2 }} type="submit">
               Create
             </Button>
           </form>

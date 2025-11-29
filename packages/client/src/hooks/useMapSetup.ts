@@ -20,7 +20,7 @@ export const useMapSetup = () => {
   const [search, setSearch] = useState("");
 
   const filteredLocations = PLACEHOLDER_LOCATIONS.filter((location) =>
-    location.text.toLowerCase().includes(search.toLowerCase())
+    location.text.toLowerCase().includes(search.toLowerCase()),
   );
 
   const onMapLoad = useCallback(() => {

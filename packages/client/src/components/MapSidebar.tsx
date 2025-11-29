@@ -13,10 +13,7 @@ import {
   InputBase,
   useTheme,
 } from "@mui/material";
-import {
-  Search as SearchIcon,
-  Place as PlaceIcon,
-} from "@mui/icons-material";
+import { Search as SearchIcon, Place as PlaceIcon } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
 import type { Location } from "../shared/types";
@@ -28,12 +25,7 @@ type Props = {
   setSearch: (search: string) => void;
 };
 
-export const MapSidebar = ({
-  locations,
-  onItemClick,
-  search,
-  setSearch,
-}: Props) => {
+export const MapSidebar = ({ locations, onItemClick, search, setSearch }: Props) => {
   const theme = useTheme();
   return (
     <Paper

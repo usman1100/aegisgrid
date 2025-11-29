@@ -28,5 +28,5 @@ createRoot(root).render(
         </ThemeProvider>
       </QueryClientProvider>
     </ClerkProvider>
-  </StrictMode>
+  </StrictMode>,
 );

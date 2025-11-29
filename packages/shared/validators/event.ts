@@ -6,7 +6,6 @@ export const locationSchema = z.object({
   y: z.number().min(-90).max(90), // latitude
 });
 
-
 // General event schema - works for both frontend and backend
 export const eventSchema = z.object({
   id: z.uuid(),

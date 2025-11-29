@@ -1,5 +1,5 @@
 import type { GeoJSONStoreFeatures } from "terra-draw";
-import {create } from 'zustand'
+import { create } from "zustand";
 import type { DrawMode } from "../shared/types";
 
 type Store = {
@@ -36,9 +36,7 @@ export const useStore = create<Store>((set) => ({
   savePoint: () =>
     set((prev) => ({
       ...prev,
-      allFeatures: prev?.currentFeature
-        ? [...prev.allFeatures, prev.currentFeature]
-        : prev.allFeatures,
+      allFeatures: prev?.currentFeature ? [...prev.allFeatures, prev.currentFeature] : prev.allFeatures,
       currentFeature: undefined,
       modal: undefined,
       drawMode: "static",
