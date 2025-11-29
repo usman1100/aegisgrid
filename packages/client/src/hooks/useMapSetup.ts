@@ -1,17 +1,20 @@
-import {  useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import type { MapRef, ViewStateChangeEvent } from "react-map-gl/maplibre";
 import { TerraDraw } from "terra-draw";
 import { TerraDrawMapLibreGLAdapter } from "terra-draw-maplibre-gl-adapter";
-import type { Location } from "../shared/types";
 import { PLACEHOLDER_LOCATIONS, terraDrawModes } from "../shared/constants";
 import { useStore } from "../state";
 
 export const useMapSetup = () => {
   const mapRef = useRef<MapRef>(null);
   const drawRef = useRef<TerraDraw | null>(null);
-  const { createPoint, drawMode, currentFeature, viewState, locationSearch, updateLocationSearch, moveMap } = useStore();
 
-
+  const createPoint = useStore(state => state.createPoint);
+  const drawMode = useStore(state => state.drawMode);
+  const currentFeature = useStore(state => state.currentFeature);
+  const viewState = useStore(state => state.viewState);
+  const locationSearch = useStore(state => state.locationSearch);
+  const moveMap = useStore(state => state.moveMap);
 
   const filteredLocations = PLACEHOLDER_LOCATIONS.filter((location) =>
     location.text.toLowerCase().includes(locationSearch.toLowerCase()),
@@ -57,13 +60,16 @@ export const useMapSetup = () => {
     }
   }, [currentFeature]);
 
-  const onMapMove = useCallback((evt: ViewStateChangeEvent) => {
-    const {longitude, latitude, zoom}=  evt.viewState
-    moveMap(longitude, latitude, zoom);
-  }, [moveMap]);
+  const onMapMove = useCallback(
+    (evt: ViewStateChangeEvent) => {
+      const { longitude, latitude, zoom } = evt.viewState;
+      moveMap(longitude, latitude, zoom);
+    },
+    [moveMap],
+  );
 
-  const moveToLocation = (location: Location) => {
-    moveMap(location.lng, location.lat, 6);
+  const moveToLocation = ([lng, lat]: [number, number]) => {
+    moveMap(lng, lat, 6);
   };
 
   return {

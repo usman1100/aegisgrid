@@ -16,9 +16,10 @@ import { useStore } from "../state";
 
 export default function MapPage() {
   const theme = useTheme();
-  const { mapRef, viewState, onMapLoad, onMapMove, filteredLocations, moveToLocation } = useMapSetup();
+  const { mapRef, viewState, onMapLoad, onMapMove } = useMapSetup();
 
-  const { allFeatures, populateFeatures } = useStore();
+  const allFeatures = useStore(state => state.allFeatures);
+  const populateFeatures = useStore(state => state.populateFeatures);
 
   const client = useApiClient();
   const { data } = useQuery({
@@ -34,7 +35,9 @@ export default function MapPage() {
           coordinates: [event.location.x, event.location.y],
           type: "Point",
         },
-        properties: {},
+        properties: {
+          name: event.name,
+        },
         type: "Feature",
         id: event.id,
       }));
