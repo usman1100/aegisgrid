@@ -11,7 +11,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApiClient } from "../../lib/api/client";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import type { GeoJSONStoreFeatures } from "terra-draw";
+import { createEventSchema } from "@aegisgrid/shared/validators";
+import type { CreateEvent } from "@aegisgrid/shared/validators";
 
 const style = {
   position: "absolute",
@@ -39,20 +40,10 @@ export const CreateEventButton = () => {
   const queryClient = useQueryClient();
 
   const { mutateAsync: createEvent, isPending } = useMutation({
-    mutationFn: ({
-      name,
-      coordinates,
-    }: {
-      name: string;
-      coordinates: GeoJSONStoreFeatures["geometry"]["coordinates"];
-    }) =>
+    mutationFn: (variables: CreateEvent) =>
       client
         .post("/events", {
-          name,
-          location: {
-            x: coordinates[0],
-            y: coordinates[1],
-          },
+          ...variables
         })
         .then((res) => res.data),
     onSuccess: () => {
@@ -66,13 +57,14 @@ export const CreateEventButton = () => {
     },
     onSubmit: async (values) => {
       try {
-        if (!currentFeature?.geometry?.coordinates) {
-          throw new Error("No coordinates found");
-        }
-        await createEvent({
+        const variables = createEventSchema.parse({
           name: values.name,
-          coordinates: currentFeature?.geometry?.coordinates,
+          location: {
+            x: currentFeature?.geometry?.coordinates?.[0],
+            y: currentFeature?.geometry?.coordinates?.[1],
+          }
         });
+        await createEvent(variables);
         savePoint();
       } catch (error) {
         console.log(error);

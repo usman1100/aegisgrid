@@ -2,6 +2,8 @@ import { Router } from "express";
 import { eq } from "drizzle-orm";
 import { databaseClient } from "../db/client";
 import { events } from "../db/schema";
+import { validateRequestBody } from "../middleware/validate";
+import { createEventSchema } from "@aegisgrid/shared/validators";
 
 const router = Router();
 
@@ -17,7 +19,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST /events - Create a new event
-router.post("/", async (req, res) => {
+router.post("/", (req, res, next) => validateRequestBody(req, res, next, createEventSchema), async (req, res) => {
   try {
     const { name, location } = req.body;
 

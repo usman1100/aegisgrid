@@ -11,6 +11,7 @@
   },
   "exports": {
     "./types": "./types.ts",
-    "./utils": "./utils.ts"
+    "./utils": "./utils.ts",
+    "./validators": "./validators/index.ts"
   }
 }
