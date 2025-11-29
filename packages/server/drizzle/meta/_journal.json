@@ -15,6 +15,13 @@
       "when": 1764413254231,
       "tag": "0001_remove_user",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764413575326,
+      "tag": "0002_create_events_table",
+      "breakpoints": true
     }
   ]
 }
