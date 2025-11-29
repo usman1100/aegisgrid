@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import {
   Search as SearchIcon,
-  Menu as MenuIcon,
   Place as PlaceIcon,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
