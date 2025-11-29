@@ -16,10 +16,10 @@ import { useStore } from "../state";
 
 export default function MapPage() {
   const theme = useTheme();
-  const { mapRef, viewState, onMapLoad, onMapMove } = useMapSetup();
+  const { mapRef, viewState, onMapLoad, onMapMove, moveToLocation } = useMapSetup();
 
-  const allFeatures = useStore(state => state.allFeatures);
-  const populateFeatures = useStore(state => state.populateFeatures);
+  const allFeatures = useStore((state) => state.allFeatures);
+  const populateFeatures = useStore((state) => state.populateFeatures);
 
   const client = useApiClient();
   const { data } = useQuery({
@@ -55,7 +55,7 @@ export default function MapPage() {
           overflow: "hidden",
         }}
       >
-        <MapSidebar />
+        <MapSidebar onItemClick={moveToLocation} />
 
         <Box sx={{ flex: 1, position: "relative" }}>
           <Map

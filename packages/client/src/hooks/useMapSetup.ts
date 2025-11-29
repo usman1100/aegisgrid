@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { MapRef, ViewStateChangeEvent } from "react-map-gl/maplibre";
 import { TerraDraw } from "terra-draw";
 import { TerraDrawMapLibreGLAdapter } from "terra-draw-maplibre-gl-adapter";
@@ -9,12 +9,16 @@ export const useMapSetup = () => {
   const mapRef = useRef<MapRef>(null);
   const drawRef = useRef<TerraDraw | null>(null);
 
-  const createPoint = useStore(state => state.createPoint);
-  const drawMode = useStore(state => state.drawMode);
-  const currentFeature = useStore(state => state.currentFeature);
-  const viewState = useStore(state => state.viewState);
-  const locationSearch = useStore(state => state.locationSearch);
-  const moveMap = useStore(state => state.moveMap);
+  const createPoint = useStore((state) => state.createPoint);
+  const drawMode = useStore((state) => state.drawMode);
+  const currentFeature = useStore((state) => state.currentFeature);
+  const locationSearch = useStore((state) => state.locationSearch);
+
+  const [viewState, setViewState] = useState({
+    longitude: -74.006,
+    latitude: 40.7128,
+    zoom: 5,
+  });
 
   const filteredLocations = PLACEHOLDER_LOCATIONS.filter((location) =>
     location.text.toLowerCase().includes(locationSearch.toLowerCase()),
@@ -60,17 +64,17 @@ export const useMapSetup = () => {
     }
   }, [currentFeature]);
 
-  const onMapMove = useCallback(
-    (evt: ViewStateChangeEvent) => {
-      const { longitude, latitude, zoom } = evt.viewState;
-      moveMap(longitude, latitude, zoom);
-    },
-    [moveMap],
-  );
+  const onMapMove = useCallback((evt: ViewStateChangeEvent) => {
+    setViewState(evt.viewState);
+  }, []);
 
-  const moveToLocation = ([lng, lat]: [number, number]) => {
-    moveMap(lng, lat, 6);
-  };
+  const moveToLocation = useCallback(([lng, lat]: [number, number]) => {
+    setViewState({
+      longitude: lng,
+      latitude: lat,
+      zoom: 6,
+    });
+  }, []);
 
   return {
     mapRef,

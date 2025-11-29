@@ -73,12 +73,12 @@ export const CreateEventButton = () => {
     validationSchema,
   });
 
-  const modal = useStore(state => state.modal);
-  const drawMode = useStore(state => state.drawMode);
-  const closeCreateEventModal = useStore(state => state.closeCreateEventModal);
-  const initiateCreateEvent = useStore(state => state.initiateCreateEvent);
-  const savePoint = useStore(state => state.savePoint);
-  const currentFeature = useStore(state => state.currentFeature);
+  const modal = useStore((state) => state.modal);
+  const drawMode = useStore((state) => state.drawMode);
+  const closeCreateEventModal = useStore((state) => state.closeCreateEventModal);
+  const initiateCreateEvent = useStore((state) => state.initiateCreateEvent);
+  const savePoint = useStore((state) => state.savePoint);
+  const currentFeature = useStore((state) => state.currentFeature);
 
   const onClose = () => {
     closeCreateEventModal();

@@ -16,13 +16,29 @@ import {
 import { Search as SearchIcon, Place as PlaceIcon } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { UserButton } from "@clerk/clerk-react";
-import { useMapSetup } from "../hooks/useMapSetup";
 import { useStore } from "../state";
+import { memo, useMemo } from "react";
 
-export const MapSidebar = () => {
+type Props = {
+  onItemClick: (coords: [number, number]) => void;
+};
+
+const MapSidebarBase = ({ onItemClick }: Props) => {
   const theme = useTheme();
-  const { moveToLocation, filteredLocations } = useMapSetup();
-  const { locationSearch, updateLocationSearch } = useStore();
+  const locationSearch = useStore((state) => state.locationSearch);
+  const updateLocationSearch = useStore((state) => state.updateLocationSearch);
+  const allFeatures = useStore((state) => state.allFeatures);
+
+  // Memoize filtered features
+  const filteredFeatures = useMemo(() => {
+    if (!locationSearch.trim()) return allFeatures;
+    const searchLower = locationSearch.toLowerCase();
+    return allFeatures.filter((item) => {
+      const name = typeof item.properties.name === "string" ? item.properties.name.toLowerCase() : "";
+      return name.includes(searchLower);
+    });
+  }, [allFeatures, locationSearch]);
+
   return (
     <Paper
       elevation={3}
@@ -79,16 +95,25 @@ export const MapSidebar = () => {
       </Box>
       <Divider />
       <List sx={{ flex: 1, overflowY: "auto" }}>
-        {filteredLocations.map((item) => (
-          <ListItem key={`${item.lat}-${item.lng}`} disablePadding>
-            <ListItemButton onClick={() => moveToLocation(item)}>
-              <ListItemIcon>
-                <PlaceIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary={item.text} secondary={item.secondary} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {filteredFeatures.map((item) => {
+          const [lng, lat] = item.geometry.coordinates;
+          if (typeof lng !== "number" || typeof lat !== "number") {
+            return null;
+          }
+
+          const name = typeof item.properties.name === "string" ? item.properties.name : "Event";
+
+          return (
+            <ListItem key={item.id} disablePadding>
+              <ListItemButton onClick={() => onItemClick([lng, lat])}>
+                <ListItemIcon>
+                  <PlaceIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText primary={name} />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
       <Divider />
       <Box sx={{ p: 2 }}>
@@ -99,3 +124,4 @@ export const MapSidebar = () => {
     </Paper>
   );
 };
+export const MapSidebar = memo(MapSidebarBase);
