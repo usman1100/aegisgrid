@@ -8,6 +8,13 @@
       "when": 1764367324867,
       "tag": "0000_create_user",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764413254231,
+      "tag": "0001_remove_user",
+      "breakpoints": true
     }
   ]
 }
