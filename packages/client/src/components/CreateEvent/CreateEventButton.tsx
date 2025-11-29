@@ -7,6 +7,9 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import CloseIcon from "@mui/icons-material/Close";
 import { useStore } from "../../state";
+import { useMutation } from "@tanstack/react-query";
+import { useApiClient } from "../../lib/api/client";
+import { useState } from "react";
 
 const style = {
   position: "absolute",
@@ -22,6 +25,24 @@ const style = {
 };
 
 export const CreateEventButton = () => {
+  const client = useApiClient();
+
+  const { mutateAsync: createEvent, isPending } = useMutation({
+    mutationFn: () =>
+      client.post("/", { name: eventName }).then((res) => res.data),
+  });
+
+  const [eventName, setEventName] = useState("");
+
+  const onClick = async () => {
+    try {
+      await createEvent();
+      savePoint();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const {
     modal,
     drawMode,
@@ -70,12 +91,16 @@ export const CreateEventButton = () => {
               variant="outlined"
               fullWidth
               placeholder="Enter event name"
+              value={eventName}
+              onChange={(e) => setEventName(e.target.value)}
+              disabled={isPending}
             />
             <Button
               variant="contained"
               color="primary"
               fullWidth
-              onClick={savePoint}
+              onClick={onClick}
+              disabled={isPending}
             >
               Create
             </Button>

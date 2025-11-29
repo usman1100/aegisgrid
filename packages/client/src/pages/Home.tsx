@@ -2,18 +2,8 @@ import { Button, Typography, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import { DefaultLayout } from "../layouts/DefaultLayout";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
-import { useApiClient } from "../lib/api/client";
-import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
-  const client = useApiClient();
-
-  const data = useQuery({
-    queryKey: ["home"],
-    queryFn: () => client.get("/").then((res) => res.data),
-  });
-
-  console.log(data);
 
   return (
     <DefaultLayout

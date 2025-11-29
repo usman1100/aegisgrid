@@ -3,16 +3,27 @@ import cors from "cors";
 import * as middleware from "./middleware";
 import { clerkMiddleware } from "@clerk/express";
 import { databaseClient } from "./db/client";
+import { events } from "./db/schema";
 const PORT = Bun.env?.PORT || 8000;
 
 const app = express();
 
 app.use(cors({ origin: "*" }));
 app.use(clerkMiddleware());
+app.use(express.json());
 app.use(middleware.authenticate);
 
-app.get("/", (_, res) => {
-  res.json({ message: "Hello World" });
+app.post("/", async (req, res) => {
+  const result = await databaseClient
+    .insert(events)
+    .values({
+      name: req.body.name,
+    })
+    .returning();
+
+  const event = result.at(0);
+
+  return res.json({ event });
 });
 
 app.listen(PORT, async () => {
