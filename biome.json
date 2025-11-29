@@ -10,6 +10,9 @@
       "recommended": true,
       "correctness": {
         "useExhaustiveDependencies": "warn"
+      },
+      "suspicious": {
+        "noShadowRestrictedNames": "off"
       }
     }
   },

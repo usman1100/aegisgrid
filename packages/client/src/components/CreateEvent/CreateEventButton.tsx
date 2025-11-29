@@ -88,7 +88,7 @@ export const CreateEventButton = () => {
   };
 
   const open = modal === "create-event";
-  const buttonText = drawMode == "point" ? "Add a point" : "Create Event";
+  const buttonText = drawMode === "point" ? "Add a point" : "Create Event";
   const [lat, ln] = currentFeature?.geometry.coordinates || [];
 
   return (
