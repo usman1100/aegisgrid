@@ -8,7 +8,7 @@ import { createEventSchema } from "@aegisgrid/shared/validators";
 const router = Router();
 
 // GET /events - List all events
-router.get("/", async (req, res) => {
+router.get("/", async (_req, res) => {
   try {
     const allEvents = await databaseClient.select().from(events);
     res.json({ events: allEvents });

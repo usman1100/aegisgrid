@@ -18,7 +18,6 @@ const transformMap = {
   "deflate-raw": zlib.createDeflateRaw,
   gzip: zlib.createGzip,
 };
-// @ts-ignore
 globalThis.CompressionStream ??= class CompressionStream {
   readable;
   writable;

@@ -35,7 +35,7 @@ export const useMapSetup = () => {
       modes: terraDrawModes,
     });
 
-    draw.on("finish", (_id, context) => {
+    draw.on("finish", (_id, _context) => {
       const feature = draw?.getSnapshot()?.at(0);
       if (feature) {
         createPoint(feature);
@@ -44,7 +44,7 @@ export const useMapSetup = () => {
 
     draw.start();
     drawRef.current = draw;
-  }, []);
+  }, [createPoint]);
 
   useEffect(() => {
     if (drawRef.current) {

@@ -1,7 +1,5 @@
-import { create } from "zustand";
-import { atom } from "jotai";
-import type { DrawMode } from "../shared/types";
 import type { GeoJSONStoreFeatures } from "terra-draw";
+import type { DrawMode } from "../shared/types";
 
 type Store = {
   drawMode: DrawMode;

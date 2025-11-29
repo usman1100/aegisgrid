@@ -1,10 +1,8 @@
 import {
-  TerraDraw,
   TerraDrawPointMode,
   TerraDrawPolygonMode,
   TerraDrawSelectMode,
 } from "terra-draw";
-import { TerraDrawMapLibreGLAdapter } from "terra-draw-maplibre-gl-adapter";
 
 export const DEFAULT_MAP_STYLE = "https://demotiles.maplibre.org/style.json";
 

@@ -9,7 +9,8 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "useExhaustiveDependencies": "warn"
+        "useExhaustiveDependencies": "warn",
+        "noUnusedImports": "error"
       },
       "suspicious": {
         "noShadowRestrictedNames": "off"
