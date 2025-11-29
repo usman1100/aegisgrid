@@ -1,7 +1,4 @@
-import Map, {
-  NavigationControl, Source,
-  Layer
-} from "react-map-gl/maplibre";
+import Map, { NavigationControl, Source, Layer } from "react-map-gl/maplibre";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Box } from "@mui/material";
@@ -11,7 +8,8 @@ import { useMapSetup } from "../hooks/useMapSetup";
 import { MapSidebar } from "../components/MapSidebar";
 import { CreateEventButton } from "../components/CreateEvent/CreateEventButton";
 import { useStore } from "../state";
-
+import { useApiClient } from "../lib/api/client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function MapPage() {
   const theme = useTheme();
@@ -27,6 +25,14 @@ export default function MapPage() {
   } = useMapSetup();
 
   const { allFeatures } = useStore();
+
+  const client = useApiClient();
+  const { data } = useQuery({
+    queryKey: ["events"],
+    queryFn: () => client.get("events"),
+  });
+
+  console.log(data?.data);
 
   return (
     <DefaultLayout>

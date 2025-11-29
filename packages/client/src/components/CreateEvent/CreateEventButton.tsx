@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import CloseIcon from "@mui/icons-material/Close";
 import { useStore } from "../../state";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApiClient } from "../../lib/api/client";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -36,10 +36,14 @@ const validationSchema = yup.object({
 
 export const CreateEventButton = () => {
   const client = useApiClient();
+  const queryClient = useQueryClient();
 
   const { mutateAsync: createEvent, isPending } = useMutation({
     mutationFn: ({ name }: { name: string }) =>
-      client.post("/", { name }).then((res) => res.data),
+      client.post("/events", { name }).then((res) => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
   });
 
   const formik = useFormik({

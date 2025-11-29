@@ -8,23 +8,14 @@ const PORT = Bun.env?.PORT || 8000;
 
 const app = express();
 
+import eventsRouter from "./routes/events";
+
 app.use(cors({ origin: "*" }));
 app.use(clerkMiddleware());
 app.use(express.json());
 app.use(middleware.authenticate);
 
-app.post("/", async (req, res) => {
-  const result = await databaseClient
-    .insert(events)
-    .values({
-      name: req.body.name,
-    })
-    .returning();
-
-  const event = result.at(0);
-
-  return res.json({ event });
-});
+app.use("/events", eventsRouter);
 
 app.listen(PORT, async () => {
   await databaseClient.execute("SELECT 1");

@@ -12,6 +12,7 @@ type Store = {
   createPoint: (feature: GeoJSONStoreFeatures) => void;
   savePoint: () => void;
   closeCreateEventModal: () => void;
+  populateFeatures: (features: GeoJSONStoreFeatures[]) => void;
 };
 export const useStore = create<Store>((set) => ({
   drawMode: "static",
@@ -50,5 +51,10 @@ export const useStore = create<Store>((set) => ({
       drawMode: "static",
       currentFeature: undefined,
       modal: undefined,
+    })),
+  populateFeatures: (features: GeoJSONStoreFeatures[]) =>
+    set((prev) => ({
+      ...prev,
+      allFeatures: features,
     })),
 }));
