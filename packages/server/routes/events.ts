@@ -19,14 +19,14 @@ router.get("/", async (req, res) => {
 // POST /events - Create a new event
 router.post("/", async (req, res) => {
   try {
-    const { name } = req.body;
-    if (!name) {
-      return res.status(400).json({ error: "Name is required" });
-    }
+    const { name, location } = req.body;
 
     const result = await databaseClient
       .insert(events)
-      .values({ name })
+      .values({
+        name,
+        location,
+      })
       .returning();
 
     const event = result.at(0);
