@@ -9,7 +9,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useStore } from "../../state";
 import { useMutation } from "@tanstack/react-query";
 import { useApiClient } from "../../lib/api/client";
-import { useState } from "react";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { useEffect } from "react";
 
 const style = {
   position: "absolute",
@@ -24,24 +26,36 @@ const style = {
   outline: "none",
 };
 
+const validationSchema = yup.object({
+  name: yup
+    .string()
+    .required("Name is required")
+    .min(3, "Name must be at least 3 characters long")
+    .max(100, "Name must be at most 100 characters long"),
+});
+
 export const CreateEventButton = () => {
   const client = useApiClient();
 
   const { mutateAsync: createEvent, isPending } = useMutation({
-    mutationFn: () =>
-      client.post("/", { name: eventName }).then((res) => res.data),
+    mutationFn: ({ name }: { name: string }) =>
+      client.post("/", { name }).then((res) => res.data),
   });
 
-  const [eventName, setEventName] = useState("");
-
-  const onClick = async () => {
-    try {
-      await createEvent();
-      savePoint();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+    },
+    onSubmit: async (values, idk) => {
+      try {
+        await createEvent({ name: values.name });
+        savePoint();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    validationSchema,
+  });
 
   const {
     modal,
@@ -51,6 +65,11 @@ export const CreateEventButton = () => {
     savePoint,
     currentFeature,
   } = useStore();
+
+  const onClose = () => {
+    closeCreateEventModal();
+    formik.resetForm();
+  };
 
   const open = modal === "create-event";
   const buttonText = drawMode == "point" ? "Add a point" : "Create Event";
@@ -63,7 +82,7 @@ export const CreateEventButton = () => {
       </Button>
       <Modal
         open={open}
-        onClose={closeCreateEventModal}
+        onClose={onClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -77,7 +96,7 @@ export const CreateEventButton = () => {
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Create Event
             </Typography>
-            <IconButton onClick={closeCreateEventModal} size="small">
+            <IconButton onClick={onClose} size="small">
               <CloseIcon />
             </IconButton>
           </Stack>
@@ -85,26 +104,33 @@ export const CreateEventButton = () => {
             <Typography>Lat: {lat}</Typography>
             <Typography>Lng: {ln}</Typography>
           </Box>
-          <Stack spacing={3}>
+          <form onSubmit={formik.handleSubmit}>
             <TextField
               label="Event Name"
               variant="outlined"
               fullWidth
               placeholder="Enter event name"
-              value={eventName}
-              onChange={(e) => setEventName(e.target.value)}
-              disabled={isPending}
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              disabled={formik.isSubmitting}
+              name="name"
+              key="name"
+              id="name"
+              helperText={formik.touched.name && formik.errors.name}
+              onBlur={formik.handleBlur}
+              error={formik.touched.name && Boolean(formik.errors.name)}
             />
             <Button
               variant="contained"
               color="primary"
               fullWidth
-              onClick={onClick}
               disabled={isPending}
+              sx={{ mt: 2 }}
+              type="submit"
             >
               Create
             </Button>
-          </Stack>
+          </form>
         </Box>
       </Modal>
     </>
